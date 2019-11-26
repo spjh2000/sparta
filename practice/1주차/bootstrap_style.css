@@ -1,0 +1,21 @@
+.mainbox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 20px;
+  background-color: gainsboro;
+  width: 60vw;
+  height: 50vh;
+  border-radius: 2%;
+}
+button {
+  width: 160px;
+  height: auto;
+}
+body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+  font-family: "Sunflower", sans-serif;
+}
