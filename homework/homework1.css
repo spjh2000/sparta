@@ -3,8 +3,9 @@ body {
 }
 
 .mainpic {
-  width: 100%;
+  width: 80%;
   height: auto;
+  margin: auto;
 }
 
 .mainpic,
@@ -15,7 +16,7 @@ body {
 }
 
 section {
-  margin: 20px 50px;
+  margin: 20px 400px;
 }
 
 h2 {
@@ -25,4 +26,18 @@ h2 {
 #submit {
   width: 300px;
   height: auto;
+}
+
+table {
+  width: 80%;
+  border: 1px solid #444444;
+  border-collapse: collapse;
+  margin: auto;
+  text-align: center;
+}
+
+th,
+td {
+  border: 1px solid #444444;
+  padding: 10px;
 }

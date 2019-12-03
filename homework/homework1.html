@@ -10,6 +10,43 @@
       href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap&subset=korean"
       rel="stylesheet"
     />
+    <script>
+      function order() {
+        $("#orderTable").html("");
+
+        $.ajax({
+          type: "GET",
+          url: "http://spartacodingclub.shop/order",
+          data: {},
+          success: function(response) {
+            let orders = response["orders"];
+            for (let i = 0; i < orders.length; i++) {
+              let address = orders[i]["address"];
+              let count = orders[i]["count"];
+              let name = orders[i]["name"];
+              let phone = orders[i]["phone"];
+
+              let html_temp =
+                "<tr>\
+            <td>" +
+                name +
+                "</td>\
+            <td>" +
+                count +
+                "</td> \
+            <td>" +
+                address +
+                "</td>\
+            <td>" +
+                phone +
+                "</td>\
+          </tr>";
+              $("#orderTable").append(html_temp);
+            }
+          }
+        });
+      }
+    </script>
   </head>
 
   <body>
@@ -21,8 +58,8 @@
       />
     </section>
     <section class="item_title">
-      <h2>상품제목</h2>
-      <span>가격: 1,000,000원/개</span>
+      <h2>BMW 8i 할인판매</h2>
+      <span>가격: 1,000,000원/대</span>
       <p>
         이 상품으로 말할 것 같으면 용왕이 찾지 못한 토끼의 간을 찾아 빨간망토의
         늑대와 아기돼지 삼형제의 숨결이 고루 녹아 있는 먹으면 120세까지 살수
@@ -32,10 +69,10 @@
     </section>
     <section class="order">
       <h2>주문하기</h2>
-      <p>주문자 성함: <input type="text" width="100px" /></p>
+      <p>주문자 성함: <input id="name" type="text" size="10px" /></p>
       <p>
         수량:
-        <select name="quantity" style="width:150px">
+        <select id="quantity" name="quantity" style="width:100px">
           <option value="">수량</option>
           <option value="1">1</option>
           <option value="2">2</option>
@@ -49,12 +86,32 @@
         </select>
       </p>
 
-      <p>주소: <input type="text" width="100px" /></p>
+      <p>주소: <input id="address" type="text" size="80px" /></p>
 
-      <p>전화번호: <input type="number" width="100px" /></p>
+      <p>전화번호: <input id="phoneNum" type="number" size="80px" /></p>
       <div class="submit">
-        <input id="submit" type="submit" value="주문하기" width="100px" />
+        <input
+          id="submit"
+          onclick="order()"
+          type="submit"
+          value="주문하기"
+          width="100px"
+        />
       </div>
+    </section>
+
+    <section class="oderList">
+      <table>
+        <thead>
+          <tr>
+            <td>이름</td>
+            <td>수량</td>
+            <td>주소</td>
+            <td>전화번호</td>
+          </tr>
+        </thead>
+        <tbody id="orderTable"></tbody>
+      </table>
     </section>
   </body>
 </html>
