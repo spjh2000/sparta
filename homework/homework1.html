@@ -12,39 +12,75 @@
     />
     <script>
       function order() {
-        $("#orderTable").html("");
+        let name = $("#name").val();
+        let count = $("#quantity").val();
+        let address = $("#address").val();
+        let phone = $("#phoneNum").val();
 
+        $.ajax({
+          type: "POST",
+          url: "http://spartacodingclub.shop/order",
+          data: {
+            name_give: name,
+            count_give: count,
+            address_give: address,
+            phone_give: phone
+          },
+          success: function(response) {
+            if (response["result"] == "success") {
+              alert("주문 완료!");
+              window.location.reload();
+            }
+          }
+        });
+      }
+
+      $(document).ready(function() {
+        $("#orderTable").html("");
+        listing();
+      });
+
+      function listing() {
         $.ajax({
           type: "GET",
           url: "http://spartacodingclub.shop/order",
           data: {},
           success: function(response) {
-            let orders = response["orders"];
-            for (let i = 0; i < orders.length; i++) {
-              let address = orders[i]["address"];
-              let count = orders[i]["count"];
-              let name = orders[i]["name"];
-              let phone = orders[i]["phone"];
-
-              let html_temp =
-                "<tr>\
-            <td>" +
-                name +
-                "</td>\
-            <td>" +
-                count +
-                "</td> \
-            <td>" +
-                address +
-                "</td>\
-            <td>" +
-                phone +
-                "</td>\
-          </tr>";
-              $("#orderTable").append(html_temp);
+            if (response["result"] == "success") {
+              let orders = response["orders"];
+              console.log(orders);
+              for (let i = 0; i < orders.length; i++) {
+                make_card(
+                  orders[i]["name"],
+                  orders[i]["count"],
+                  orders[i]["address"],
+                  orders[i]["phone"]
+                );
+              }
+            } else {
+              alert("주문을 받아오지 못했습니다");
             }
           }
         });
+      }
+
+      function make_card(name, count, address, phone) {
+        let temp_html =
+          "<tr>\
+            <td>" +
+          name +
+          "</td>\
+            <td>" +
+          count +
+          "</td>\
+            <td>" +
+          address +
+          "</td>\
+            <td>" +
+          phone +
+          "</td>\
+          </tr>";
+        $("#ordersTable").append(temp_html);
       }
     </script>
   </head>
