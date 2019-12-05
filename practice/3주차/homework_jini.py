@@ -27,3 +27,9 @@ for music in musics:
 
         print(rank, title_1, singer_1)
         rank += 1
+        doc = {
+                    'rank': rank,
+                    'title': title_1,
+                    'singer': singer_1
+                }
+        db.jini.insert_one(doc)
