@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <title>나홀로 링크 메모장</title>
+
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+      crossorigin="anonymous"
+    />
+
+    <!-- JS & Jquery-->
+    <!-- // 기본적으로 부트스트랩 안에서 jquery를 import 하게 되어 있음 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+      integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+      integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- 구글폰트 -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Stylish&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- style -->
+    <style type="text/css">
+      * {
+        font-family: "Stylish", sans-serif;
+      }
+      .wrap {
+        width: 900px;
+        margin: auto;
+      }
+      .comment {
+        color: blue;
+        font-weight: bold;
+      }
+      .form-post {
+        max-width: 500px;
+        padding: 2rem;
+        margin: 2rem auto;
+        border-color: #e9ecef;
+        border-radius: 0.3rem;
+        border: solid;
+        display: none;
+      }
+    </style>
+
+    <script type="text/javascript">
+     function toggleBox() {
+        var box = $("#post-box");
+        if (box.css("display") === "none") {
+          box.css("display", "block");
+          $("#postingBox").text("포스팅박스 닫기");
+        } else {
+          box.css("display", "none");
+          $("#postingBox").text("포스팅박스 열기");
+        }
+      }
+
+    $(document).ready(function() {
+      listing();
+    });
+
+
+   function savePost() {
+   let url = $('#articleUrl').val()
+   let comment = $('#form-control').val()
+    $.ajax({
+        type: "POST",
+        url: "/post",
+        data: {url_give:url, comment_give:comment},
+        success: function(response){
+        console.log(response)
+    }
+  })}
+
+    function listing() {
+    $.ajax({
+        type: "GET",
+        url: "/post",
+        data: {},
+        success: function(response){
+          console.log(response);
+          let articles = response["articles"];
+            for (let i = 0; i < articles.length; i++) {
+              make_card(
+                articles[i]["comment"],
+                articles[i]["desc"],
+                articles[i]["image"],
+                articles[i]["title"],
+                articles[i]["url"]
+              );
+            }
+          },
+
+        error: function(err){
+          console.log(err);
+          if (res['response'] === 'success') {
+            alert('포스팅 성공');
+            window.location.reload()
+          }
+         }
+<!--          페이지를 리로드 할때 쓰는 함수-->
+  })}
+
+   function make_card(comment, desc, image, title, url) {
+        let temp_html =
+          '<div class="card">\
+        <img class="card-img-top" src="' +
+          image +
+          '" alt="Card image cap">\
+        <div class="card-body">\
+          <a href="' +
+          url +
+          '" class="card-title">' +
+          title +
+          '</a>\
+          <p class="card-text">' +
+          desc +
+          '</p>\
+          <p class="card-text comment">' +
+          comment +
+          "</p>\
+        </div>\
+      </div>";
+        $("#cards-box").append(temp_html);
+      }
+    </script>
+  </head>
+
+  <body>
+  <!--           아래 형식은 jinja template이고, html안에 파이썬 형식의 데이터를 삽입하기 위함임.  flask 패키지 안에 포함되어 있음.
+    static이나 template 폴더명은 flask(render_template 패키지)에서 정해진 규칙대로 읽어오기 위해 사용해야 하는 규칙임. but 폴더명을 바꿀 수는 있음-->
+<!--          <img src="{{url_for('static', filename='blueberry-3460423_1920.jpg')}}">-->
+    <div class="wrap">
+      <div class="jumbotron">
+        <h1 class="display-4">나홀로 링크 메모장!</h1>
+        <p class="lead">
+          중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다
+        </p>
+        <hr class="my-4" />
+        <p class="lead">
+          <a
+            id="postingBox"
+            onclick="toggleBox()"
+            class="btn btn-primary btn-lg"
+            href="#"
+            role="button"
+            >포스팅박스 열기</a>
+        </p>
+      </div>
+      <div class="form-post" id="post-box">
+        <div>
+          <div class="form-group">
+            <label for="articleUrl">아티클 URL</label>
+            <input id="articleUrl" class="form-control" placeholder="" />
+          </div>
+          <div class="form-group">
+            <label for="form-control">간단 코멘트</label>
+            <textarea id= form-control class="form-control" rows="2"></textarea>
+          </div>
+          <button
+            onclick="savePost()"
+            type="button"
+            class="btn btn-primary"
+            id="testButton"
+          >
+            기사저장
+          </button>
+        </div>
+      </div>
+      <div class="card-columns" id="cards-box">
+
+      </div>
+  </body>
+</html>
